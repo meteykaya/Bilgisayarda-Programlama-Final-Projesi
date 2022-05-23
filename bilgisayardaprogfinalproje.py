@@ -1,5 +1,3 @@
 print("Github Test")
 print("Degisiklikleri kaydetme Github Test")
-print("Github Test")
-print("Github Test")
-print ("hello world")
+print("silinmis kodların islem gecmisinde gorulup gorulemedigini anlamak icin yazılmıstır")
