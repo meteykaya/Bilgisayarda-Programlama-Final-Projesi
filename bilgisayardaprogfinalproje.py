@@ -66,7 +66,7 @@ class Ozankent():
                 sql_select_query = """select * from Site where Plaka = ? """
                 self.islem.execute(sql_select_query, (text,))
                 data = self.islem.fetchall()
-  if data:
+                if data:
                     print("K A P I   A Ç I L I Y O R")
                     sql_select_query = """select * from Arac_Kayit where Plaka_No = ? """
                     self.islem.execute(sql_select_query, (text,))
