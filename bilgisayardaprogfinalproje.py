@@ -83,3 +83,49 @@ class Ozankent():
                             self.islem.execute("""INSERT INTO Arac_Kayit VALUES (?,?,?,?)""", data)
                             self.veritabanı.commit()
                             print("\n Kayıt başarıyla girilmiştir.")
+ else:
+                            girdi = ''
+                            deger = 'Ç'
+                            data = (text, deger, girdi, zaman)
+                            self.islem.execute("""INSERT INTO Arac_Kayit VALUES (?,?,?,?)""", data)
+                            print("\n Kayıt başarıyla girilmiştir.")
+                            self.veritabanı.commit()
+                    else:
+                        girdi = ''
+                        deger = 'G'
+                        data = (text, deger, zaman, girdi)
+                        self.islem.execute("""INSERT INTO Arac_Kayit VALUES (?,?,?,?)""", (data))
+                        self.veritabanı.commit()
+                        print("\n Kayıt başarıyla girilmiştir.")
+                else:
+                    print ("Araç Siteye Ait Değil.Kapılar Kapalı")
+
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+
+
+
+
+
+    def menu(self):
+        print("\n ******** OZANKENT SİTESİ ARAÇ PLAKA TANIMA SİSTEMİ *******\n")
+        print(" 1) Kayıt İşlemleri \n 2) Plaka Tanıma Demo \n 3) Araç Sorgulama\n 4) Çıkış \n ")
+
+        self.anahtar = "off"
+        while self.anahtar == "off":
+            secim = input("\nHangi işlemi yapmak istediğinizi yazınız: ")
+            choice = secim.lower()
+            if choice == "1":
+                self.kayıt_menu()
+                self.anahtar = "on"
+            elif choice == "2":
+                self.plaka_tanıma()
+                self.anahtar = "on"
+            elif choice == "3":
+                self.sorgulama()
+                self.anahtar = "on"
+            elif choice == "4":
+                self.Cikis_yap()
+                self.anahtar = "on"
+            else:
+                print("Girilen string anlaşılmadı. Lütfen tekrar deneyin. Örn: 'öğrenci ekle'")
