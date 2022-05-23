@@ -66,3 +66,20 @@ class Ozankent():
                 sql_select_query = """select * from Site where Plaka = ? """
                 self.islem.execute(sql_select_query, (text,))
                 data = self.islem.fetchall()
+  if data:
+                    print("K A P I   A Ç I L I Y O R")
+                    sql_select_query = """select * from Arac_Kayit where Plaka_No = ? """
+                    self.islem.execute(sql_select_query, (text,))
+                    data = self.islem.fetchall()
+                    an = datetime.datetime.now()
+                    tarih = datetime.datetime.ctime(an)
+                    zaman = datetime.datetime.strftime(an, '%d %B %Y') + ' ' + datetime.datetime.strftime(an, '%X')
+                    for row in data: deger = row[1]
+                    if len(data) > 0:
+                        if deger == 'Ç':
+                            girdi = ''
+                            deger = 'G'
+                            data = (text, deger, zaman, girdi)
+                            self.islem.execute("""INSERT INTO Arac_Kayit VALUES (?,?,?,?)""", data)
+                            self.veritabanı.commit()
+                            print("\n Kayıt başarıyla girilmiştir.")
