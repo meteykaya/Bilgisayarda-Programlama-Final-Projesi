@@ -83,7 +83,7 @@ class Ozankent():
                             self.islem.execute("""INSERT INTO Arac_Kayit VALUES (?,?,?,?)""", data)
                             self.veritabanı.commit()
                             print("\n Kayıt başarıyla girilmiştir.")
- else:
+                        else:
                             girdi = ''
                             deger = 'Ç'
                             data = (text, deger, girdi, zaman)
