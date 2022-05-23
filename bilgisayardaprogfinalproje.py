@@ -35,3 +35,34 @@ class Ozankent():
                 contours = imutils.grab_contours(contours)
                 contours = sorted(contours, key=cv2.contourArea, reverse=True)[:10]
                 screenCnt = None
+
+                for c in contours:
+                    peri = cv2.arcLength(c, True)
+                    approx = cv2.approxPolyDP(c, 0.018 * peri, True)
+                    if len(approx) == 4:
+                        screenCnt = approx
+                        break
+                if screenCnt is None:
+                    detected = 0
+                    print("No contour detected")
+                else:
+                    detected = 1
+                if detected == 1:
+                    cv2.drawContours(img, [screenCnt], -1, (0, 0, 255), 3)
+                mask = np.zeros(gray.shape, np.uint8)
+                new_image = cv2.drawContours(mask, [screenCnt], 0, 255, -1, )
+                new_image = cv2.bitwise_and(img, img, mask=mask)
+                (x, y) = np.where(mask == 255)
+                (topx, topy) = (np.min(x), np.min(y))
+                (bottomx, bottomy) = (np.max(x), np.max(y))
+                Cropped = gray[topx:bottomx + 1, topy:bottomy + 1]
+                plaka_no = pytesseract.image_to_string(Cropped, config='--psm 11')
+                print("Plaka Numarası ->", plaka_no)
+                img = cv2.resize(img, (500, 300))
+                Cropped = cv2.resize(Cropped, (400, 200))
+                cv2.imshow('Araba', img)
+                cv2.imshow('Kirpildi', Cropped)
+                text = plaka_no.strip('\n,!')
+                sql_select_query = """select * from Site where Plaka = ? """
+                self.islem.execute(sql_select_query, (text,))
+                data = self.islem.fetchall()
