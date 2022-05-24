@@ -129,3 +129,27 @@ class Ozankent():
                 self.anahtar = "on"
             else:
                 print("Girilen string anlaşılmadı. Lütfen tekrar deneyin. Örn: 'öğrenci ekle'")
+
+                def ana_menu(self):
+        print("\n ******** OZANKENT SİTESİ ARAÇ PLAKA TANIMA SİSTEMİ *******\n")
+        print(" 1) Kayıt İşlemleri \n 2) Plaka Tanıma Demo \n 3) Araç Sorgulama\n 4) Çıkış \n ")
+
+        self.anahtar = "off"
+        while self.anahtar == "off":
+            secim = input("\nHangi işlemi yapmak istediğinizi yazınız: ")
+            choice = int(secim)
+            print(secim)
+            if choice == 1:
+                self.kayıt_menu()
+                self.anahtar = "on"
+            elif choice == 2:
+                self.plaka_tanıma()
+                self.anahtar = "on"
+            elif choice == 3:
+                self.sorgulama()
+                self.anahtar = "on"
+            elif choice == 4:
+                self.Cikis_yap()
+                self.anahtar = "on"
+            else:
+                print("Lütfen olan seçenek numaralarından girerek tekrar deneyiniz!")
