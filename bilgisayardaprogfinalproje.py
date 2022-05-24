@@ -130,7 +130,7 @@ class Ozankent():
             else:
                 print("Girilen string anlaşılmadı. Lütfen tekrar deneyin. Örn: 'öğrenci ekle'")
 
-                def ana_menu(self):
+    def ana_menu(self):
         print("\n ******** OZANKENT SİTESİ ARAÇ PLAKA TANIMA SİSTEMİ *******\n")
         print(" 1) Kayıt İşlemleri \n 2) Plaka Tanıma Demo \n 3) Araç Sorgulama\n 4) Çıkış \n ")
 
@@ -154,7 +154,7 @@ class Ozankent():
             else:
                 print("Lütfen olan seçenek numaralarından girerek tekrar deneyiniz!")
 
-                   def Cikis_yap(self):
+    def Cikis_yap(self):
         print("\n Çıkış başarıyla yapıldı.")
         self.veritabanı.close()
         self.durum = False
@@ -188,5 +188,3 @@ class Ozankent():
                 anahtar1 = 1
             else:
                 print("Girilen değer anlaşılmadı. Lütfen tekrar deneyin.")
-
-               
