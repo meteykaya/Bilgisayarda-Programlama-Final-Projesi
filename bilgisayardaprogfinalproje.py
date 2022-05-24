@@ -188,3 +188,5 @@ class Ozankent():
                 anahtar1 = 1
             else:
                 print("Girilen değer anlaşılmadı. Lütfen tekrar deneyin.")
+
+               
