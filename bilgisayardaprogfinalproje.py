@@ -188,3 +188,26 @@ class Ozankent():
                 anahtar1 = 1
             else:
                 print("Girilen değer anlaşılmadı. Lütfen tekrar deneyin.")
+                
+def sorgulama(self):
+        print("\n Araç Kayıt veritabanındaki tüm kayıtlar:  --------------------------------------")
+        self.islem.execute("SELECT * FROM Arac_Kayit")
+        data = self.islem.fetchall()
+        karar = bool(data)
+        print("Plaka No Giriş-Çıkış Giriş Saati Çıkış Saati")
+        print("-------- ----------- ----------- -----------\n")
+
+        for value in data:
+            print(value[0], "\t\t", value[1], "\t\t", value[2], "\t\t", value[3])
+
+    def kayıt_goruntule(self):
+        print("\n Veritabanındaki tüm kayıtlar:  --------------------------------------")
+        self.islem.execute("SELECT * FROM Site")
+        data = self.islem.fetchall()
+        karar = bool(data)
+        print ("Blok Daire Adı Soyadı Plaka No")
+        print ("---------- ---------- --------\n")
+
+        for value in data:
+            print(value[0],"\t\t",value[1],"\t\t",value[2])
+        self.kayıt_menu()
