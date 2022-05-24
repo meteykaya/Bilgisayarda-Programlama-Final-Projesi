@@ -231,3 +231,87 @@ class Ozankent():
         self.islem.execute("SELECT * FROM Site")
         data = self.islem.fetchall()
         karar = bool(data)
+        if karar == True:
+            print("-> Lütfen Güncelleme yapılacak kayıdın sırasını seçin:\n")
+            sayı = 0
+            for sıra, veri in enumerate(data):
+                print(sıra + 1, ") ", veri, sep="")
+                sayı = sayı + 1
+
+            while True:
+                try:
+                    secim = int(input("\n -- Seçiminiz: "))
+                    if secim > 0 and secim < sayı + 1:
+                        self.islem.execute("SELECT * FROM Site WHERE rowid = {}".format(secim))
+                        alınan = self.islem.fetchall()
+                        print("Seçilen Kayıt -> ", alınan, end="\n\n")
+                        print("Hangi Değeri Değiştireceksiniz\n 1.Blok Daire\n 2.Adi_soyadi\n 3.Plaka\n 4.Çıkış) ")
+                        choice = input(" -> Güncelleme Yapılacak Değerin Numarasını Yazınız: ")
+                        if choice == "1":
+                            yeni_veri = input("\n-- Yeni veriyi girin: ")
+                            self.islem.execute(
+                                "UPDATE Site SET Blok_Daire = '{}' WHERE rowid = {}".format(yeni_veri, secim))
+                            self.veritabanı.commit()
+                            print("-- Güncelleme tamamlandı!")
+                            break
+                        elif choice == "2":
+                            yeni_veri = input("\n-- Yeni veriyi girin: ")
+                            self.islem.execute("UPDATE Site SET Adi_Soyadi = '{}' WHERE rowid = {}".format(yeni_veri, secim))
+                            self.veritabanı.commit()
+                            print("-- Güncelleme tamamlandı!")
+                            break
+                        elif choice == "3":
+                            yeni_veri = input("\n-- Yeni veriyi girin: ")
+                            self.islem.execute("UPDATE Site SET Plaka = '{}' WHERE rowid = {}".format(yeni_veri, secim))
+                            self.veritabanı.commit()
+                            print("-- Güncelleme tamamlandı!")
+                            break
+                        elif choice == "4":
+                            kayıt_menu()
+                            break
+                        else:
+                            print(" (!) Girilen Kriter anlaşılmadı. Doğru yazdığınızdan emin olun.\n")
+                            break
+                    else:
+                        print(" (!) Girilen sıra değerinde kayıt bulunmamaktadır. Sıra numarasını doğru girin!")
+
+                except:
+                    print(" (!) Girilen değer anlaşılmadı! Lütfen rakam giriniz.\n")
+
+        else:
+            print("\n Veritabanında güncellenebilecek öğrenci kaydı bulunmamaktadır!\n")
+
+        self.kayıt_goruntule()
+        self.kayıt_menu()
+
+    def kayit_sil(self):
+        print("\n KAYIT SİLME:  --------------------------------")
+        self.islem.execute("SELECT * FROM Site")
+        data = self.islem.fetchall()
+        karar = bool(data)
+        if karar == True:
+            print("-> Lütfen Silinmesini İstediğiniz Kayıdın Sıra Numarasını Giriniz:\n")
+            sayı = 0
+            for sıra, veri in enumerate(data):
+                print(sıra + 1, ") ", veri, sep="")
+                sayı = sayı + 1
+        while True:
+            try:
+                secim = int(input("\n -- Seçiminiz: "))
+                if secim > 0 and secim < sayı + 1:
+                    self.islem.execute("DELETE FROM Site WHERE rowid = {}".format(secim))
+                    self.veritabanı.commit()
+                    print("\n Seçilen kayıt başarıyla silinmiştir.\n")
+                    break
+                else:
+                    print("\n Seçilen değerde kayıt bulunmamaktadır. Tekrar deneyin.")
+            except:
+                print("Sadece sayı giriniz!")
+
+        self.kayıt_goruntule()
+        self.kayıt_menu()
+
+Site = Ozankent("Ozankent Sitesi")
+
+while Site.durum == True:
+    Site.ana_menu()
