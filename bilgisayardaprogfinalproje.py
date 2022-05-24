@@ -188,8 +188,8 @@ class Ozankent():
                 anahtar1 = 1
             else:
                 print("Girilen değer anlaşılmadı. Lütfen tekrar deneyin.")
-                
-def sorgulama(self):
+
+    def sorgulama(self):
         print("\n Araç Kayıt veritabanındaki tüm kayıtlar:  --------------------------------------")
         self.islem.execute("SELECT * FROM Arac_Kayit")
         data = self.islem.fetchall()
