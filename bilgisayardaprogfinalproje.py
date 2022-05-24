@@ -153,3 +153,38 @@ class Ozankent():
                 self.anahtar = "on"
             else:
                 print("Lütfen olan seçenek numaralarından girerek tekrar deneyiniz!")
+
+                   def Cikis_yap(self):
+        print("\n Çıkış başarıyla yapıldı.")
+        self.veritabanı.close()
+        self.durum = False
+
+    def kayıt_menu(self):
+        print("\n-----  KAYIT İŞLEMLERİ MENÜSÜ  -----\n")
+        print(" 1) Kayıt Girişi \n 2) Kayıt Güncelle \n 3) Kayıt Sil \n 4) Kayıtları Görüntüle \n 5) Ana Menü \n 6) Çıkış")
+
+        anahtar1 = 0
+        while anahtar1 == 0:
+            secim = input("\nHangi işlemi yapmak istediğinizi yazınız: ")
+            choice = int(secim)
+
+            if choice == 1:
+                self.kayıt_ekle()
+                anahtar1 = 1
+            elif choice == 2:
+                self.kayıt_guncelle()
+                anahtar1 = 1
+            elif choice == 3:
+                self.kayit_sil()
+                anahtar1 = 1
+            elif choice == 4:
+                self.kayıt_goruntule()
+                anahtar1 = 1
+            elif choice == 5:
+                self.ana_menu()
+                anahtar1 = 1
+            elif choice == 6:
+                self.Cikis_yap()
+                anahtar1 = 1
+            else:
+                print("Girilen değer anlaşılmadı. Lütfen tekrar deneyin.")
