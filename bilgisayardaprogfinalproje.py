@@ -211,3 +211,23 @@ def sorgulama(self):
         for value in data:
             print(value[0],"\t\t",value[1],"\t\t",value[2])
         self.kayıt_menu()
+        
+   def kayıt_ekle(self):
+        print("\n Yeni Kayıt:  -----------------------------------------------")
+        key = "off"
+        while key == "off":
+            daire = input(" Blok-Daire: ")
+            adsoyad = input(" Adı Soyadı: ")
+            plaka = input(" Araç Plaka No: ")
+            listem = [daire, adsoyad, plaka]
+            self.islem.execute("INSERT INTO Site VALUES (?,?,?)", (listem))
+            self.veritabanı.commit()
+            print("\n Kayıt başarıyla girilmiştir.")
+            self.kayıt_goruntule()
+            self.kayıt_menu()
+
+    def kayıt_guncelle(self):
+        print("\n Kayıt Güncelleme:  --------------------------------")
+        self.islem.execute("SELECT * FROM Site")
+        data = self.islem.fetchall()
+        karar = bool(data)
