@@ -22,9 +22,9 @@ class Ozankent():
 
         dosyalar=os.listdir(klasor) #klasör içindeki resimleri dosyalar değişkenine atama
         for dosya in dosyalar: #dosyalar değişkeninin içindeki dosyaların sıra ile okunması
-                print("Site Bariyerlerine Gelen Araç :->",dosya) 
+                print("Site Bariyerlerine Gelen Araç :->",dosya) # plakası okunan araç plakasının ekrana yazdırılması
 
-                img = cv2.imread(dosya, cv2.IMREAD_COLOR)
+                img = cv2.imread(dosya, cv2.IMREAD_COLOR) # okunan plaka resminin program tarafından işlenmesi
                 img = cv2.resize(img, (600, 400))
 
                 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -57,16 +57,16 @@ class Ozankent():
                 (bottomx, bottomy) = (np.max(x), np.max(y))
                 Cropped = gray[topx:bottomx + 1, topy:bottomy + 1]
                 plaka_no = pytesseract.image_to_string(Cropped, config='--psm 11')
-                print("Plaka Numarası ->", plaka_no)
+                print("Plaka Numarası ->", plaka_no) # okunan plakanın plaka_no değerine aktarılması
                 img = cv2.resize(img, (500, 300))
                 Cropped = cv2.resize(Cropped, (400, 200))
-                cv2.imshow('Araba', img)
-                cv2.imshow('Kirpildi', Cropped)
+                cv2.imshow('Araba', img) # tekrar boyutlandırılan araba resminin gösterilmesi
+                cv2.imshow('Kirpildi', Cropped) # kesilen araba resminin gösterilmesi
                 text = plaka_no.strip('\n,!')
-                sql_select_query = """select * from Site where Plaka = ? """
+                sql_select_query = """select * from Site where Plaka = ? """ #gelen aracın veritabanında siteye ait olup olmadığının tespiti
                 self.islem.execute(sql_select_query, (text,))
                 data = self.islem.fetchall()
-                if data:
+                if data: # eğer araç siteye ait ise otomatik kapının açılmasını ve giriş-çıkış saatinin sisteme işlenmesi
                     print("K A P I   A Ç I L I Y O R")
                     sql_select_query = """select * from Arac_Kayit where Plaka_No = ? """
                     self.islem.execute(sql_select_query, (text,))
@@ -76,21 +76,21 @@ class Ozankent():
                     zaman = datetime.datetime.strftime(an, '%d %B %Y') + ' ' + datetime.datetime.strftime(an, '%X')
                     for row in data: deger = row[1]
                     if len(data) > 0:
-                        if deger == 'Ç':
+                        if deger == 'Ç': #veritabanındaki son değer eğer çıkışı gösteriyorsa kaydederken bu sefer giriş olarak kaydetmesi
                             girdi = ''
                             deger = 'G'
                             data = (text, deger, zaman, girdi)
                             self.islem.execute("""INSERT INTO Arac_Kayit VALUES (?,?,?,?)""", data)
                             self.veritabanı.commit()
                             print("\n Kayıt başarıyla girilmiştir.")
-                        else:
+                        else: #veritabanındaki son değer eğer girişi gösteriyorsa kaydederken bu sefer çıkış olarak kaydetmesi
                             girdi = ''
                             deger = 'Ç'
                             data = (text, deger, girdi, zaman)
                             self.islem.execute("""INSERT INTO Arac_Kayit VALUES (?,?,?,?)""", data)
                             print("\n Kayıt başarıyla girilmiştir.")
                             self.veritabanı.commit()
-                    else:
+                    else: # eğer aracın kaydı veritabanına ilk sefer yapılıyorsa
                         girdi = ''
                         deger = 'G'
                         data = (text, deger, zaman, girdi)
@@ -98,37 +98,37 @@ class Ozankent():
                         self.veritabanı.commit()
                         print("\n Kayıt başarıyla girilmiştir.")
                 else:
-                    print ("Araç Siteye Ait Değil.Kapılar Kapalı")
+                    print ("Araç Siteye Ait Değil.Kapılar Kapalı") #veritabanında olmayan bir araç geldiğinde kapıların kapalı olduğunu belirten ibare
 
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
-
-
+        cv2.waitKey(0) #gösterilen resimlerin ekrandan kaybolması için bir tuşa basılması gerekmektedir
+        cv2.destroyAllWindows() #açılan tüm pencereleri kaptmak için kullanılmıştır.
 
 
 
-    def menu(self):
+
+
+    def menu(self): #program ilk çalıştırıldığında ekrana gelecek olan menünün işlendiği kod kısmıdır
         print("\n ******** OZANKENT SİTESİ ARAÇ PLAKA TANIMA SİSTEMİ *******\n")
         print(" 1) Kayıt İşlemleri \n 2) Plaka Tanıma Demo \n 3) Araç Sorgulama\n 4) Çıkış \n ")
 
-        self.anahtar = "off"
+        self.anahtar = "off" #  doğru seçim yapılana kadar menüyü veya uyarıları ekrana getirecektir.
         while self.anahtar == "off":
             secim = input("\nHangi işlemi yapmak istediğinizi yazınız: ")
             choice = secim.lower()
-            if choice == "1":
+            if choice == "1": #  eğer seçim 1 ise  alt kayıt menünün açılması
                 self.kayıt_menu()
                 self.anahtar = "on"
-            elif choice == "2":
+            elif choice == "2": #  eğer seçim 2 ise  plaka tanımanın yaptırılması
                 self.plaka_tanıma()
                 self.anahtar = "on"
-            elif choice == "3":
+            elif choice == "3": #  eğer seçim 3 ise sorgulamanın yapılması
                 self.sorgulama()
                 self.anahtar = "on"
-            elif choice == "4":
+            elif choice == "4": #  eğer seçim 4 ise programdan çıkılması
                 self.Cikis_yap()
                 self.anahtar = "on"
             else:
-                print("Girilen string anlaşılmadı. Lütfen tekrar deneyin. Örn: 'öğrenci ekle'")
+                print("Girilen değer anlaşılmadı. Lütfen tekrar deneyin.")
 
     def ana_menu(self):
         print("\n ******** OZANKENT SİTESİ ARAÇ PLAKA TANIMA SİSTEMİ *******\n")
@@ -137,59 +137,57 @@ class Ozankent():
         self.anahtar = "off"
         while self.anahtar == "off":
             secim = input("\nHangi işlemi yapmak istediğinizi yazınız: ")
-            choice = int(secim)
-            print(secim)
-            if choice == 1:
+            choice = secim.lower()
+            if choice == "1": #  eğer seçim 1 ise  alt kayıt menünün açılması
                 self.kayıt_menu()
                 self.anahtar = "on"
-            elif choice == 2:
+            elif choice == "2": #  eğer seçim 2 ise  plaka tanımanın yaptırılması
                 self.plaka_tanıma()
                 self.anahtar = "on"
-            elif choice == 3:
+            elif choice == "3": #  eğer seçim 3 ise sorgulamanın yapılması
                 self.sorgulama()
                 self.anahtar = "on"
-            elif choice == 4:
+            elif choice == "4": #  eğer seçim 4 ise programdan çıkılması
                 self.Cikis_yap()
                 self.anahtar = "on"
             else:
                 print("Lütfen olan seçenek numaralarından girerek tekrar deneyiniz!")
 
-    def Cikis_yap(self):
+    def Cikis_yap(self): # programdan çıkışın yapılmasını  ve veritabanının kapatılmasını sağlayan kod
         print("\n Çıkış başarıyla yapıldı.")
         self.veritabanı.close()
         self.durum = False
 
-    def kayıt_menu(self):
+    def kayıt_menu(self): #veritabanına kayıt eklenmesi, güncelleştirilmesi veya silinmesi için kullanıcıya menü göstermek
         print("\n-----  KAYIT İŞLEMLERİ MENÜSÜ  -----\n")
         print(" 1) Kayıt Girişi \n 2) Kayıt Güncelle \n 3) Kayıt Sil \n 4) Kayıtları Görüntüle \n 5) Ana Menü \n 6) Çıkış")
 
         anahtar1 = 0
         while anahtar1 == 0:
             secim = input("\nHangi işlemi yapmak istediğinizi yazınız: ")
-            choice = int(secim)
-
-            if choice == 1:
+            choice = secim.lower()
+            if choice == "1": # kayıt eklemek için kullanılacak kod bölümü
                 self.kayıt_ekle()
                 anahtar1 = 1
-            elif choice == 2:
+            elif choice == "2": # kayıt güncellemek için kullanılacak kod bölümü
                 self.kayıt_guncelle()
                 anahtar1 = 1
-            elif choice == 3:
+            elif choice == "3": # kayıt silmek için kullanılacak kod bölümü
                 self.kayit_sil()
                 anahtar1 = 1
-            elif choice == 4:
+            elif choice == "4": # kayıt görüntülemek için kullanılacak kod bölümü
                 self.kayıt_goruntule()
                 anahtar1 = 1
-            elif choice == 5:
+            elif choice == "5": # üst ana menüye gitmek için kullanılacak kod bölümü
                 self.ana_menu()
                 anahtar1 = 1
-            elif choice == 6:
+            elif choice == "6": # çıkış yapmak için kullanılacak kod bölümü
                 self.Cikis_yap()
                 anahtar1 = 1
-            else:
+            else: # listede olmayan bir değer girildiğinde verilecek uyarı
                 print("Girilen değer anlaşılmadı. Lütfen tekrar deneyin.")
 
-    def sorgulama(self):
+    def sorgulama(self): # araç veritabanında bulunan araç giriş-çıkışlarını basit bir şekilde ekrana getiren kod bölümü
         print("\n Araç Kayıt veritabanındaki tüm kayıtlar:  --------------------------------------")
         self.islem.execute("SELECT * FROM Arac_Kayit")
         data = self.islem.fetchall()
@@ -200,7 +198,7 @@ class Ozankent():
         for value in data:
             print(value[0], "\t\t", value[1], "\t\t", value[2], "\t\t", value[3])
 
-    def kayıt_goruntule(self):
+    def kayıt_goruntule(self):  # daire ve araç sahipleri veritabanında bulunan bilgileri basit bir şekilde ekrana getiren kod bölümü
         print("\n Veritabanındaki tüm kayıtlar:  --------------------------------------")
         self.islem.execute("SELECT * FROM Site")
         data = self.islem.fetchall()
@@ -211,8 +209,8 @@ class Ozankent():
         for value in data:
             print(value[0],"\t\t",value[1],"\t\t",value[2])
         self.kayıt_menu()
-        
-   def kayıt_ekle(self):
+
+    def kayıt_ekle(self): # daire ve araç sahipleri veritabanına yeni bir kaydın yapılmasını sağlayan kod bölümü
         print("\n Yeni Kayıt:  -----------------------------------------------")
         key = "off"
         while key == "off":
@@ -226,7 +224,7 @@ class Ozankent():
             self.kayıt_goruntule()
             self.kayıt_menu()
 
-    def kayıt_guncelle(self):
+    def kayıt_guncelle(self): # daire ve araç sahipleri veritabanında varolan bir kaydın değiştirilmesini sağlayan kod bölümü
         print("\n Kayıt Güncelleme:  --------------------------------")
         self.islem.execute("SELECT * FROM Site")
         data = self.islem.fetchall()
@@ -284,7 +282,7 @@ class Ozankent():
         self.kayıt_goruntule()
         self.kayıt_menu()
 
-    def kayit_sil(self):
+    def kayit_sil(self): # daire ve araç sahipleri veritabanında verolan bir kaydın sislmnmesini sağlayan kod bölümü
         print("\n KAYIT SİLME:  --------------------------------")
         self.islem.execute("SELECT * FROM Site")
         data = self.islem.fetchall()
